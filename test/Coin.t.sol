@@ -57,6 +57,26 @@ contract TestCoin is Test {
 
     }
 
+    function testFailApprovals() public{
+        c.mint(address(this),100);
+
+        c.approve(0x82Eb1ae21D52821EEb195F2c2c0D40e66b33c97D,10);
+
+        vm.prank(0x82Eb1ae21D52821EEb195F2c2c0D40e66b33c97D);
+
+        c.transferFrom(address(this),0x82Eb1ae21D52821EEb195F2c2c0D40e66b33c97D,20);
+
+
+
+    }
+
+
+    function testFailTransfer() public{
+        c.mint(address(this), 10);
+
+        c.transfer(0x82Eb1ae21D52821EEb195F2c2c0D40e66b33c97D,20);
+    }
+
 
 
 
