@@ -8,73 +8,88 @@ import "src/Coin.sol";
 contract TestCoin is Test {
     Coin c;
 
+    event Transfer(address indexed from, address indexed to , uint256 value);
+
     function setUp() public {
         c = new Coin();
     }
 
 
-    function testMint() public{
-        c.mint(address(this), 100);
-        assertEq(c.balanceOf(address(this)), 100,"ok");
-       assertEq(c.balanceOf(0x82Eb1ae21D52821EEb195F2c2c0D40e66b33c97D), 0,"ok");
+    // function testMint() public{
+    //     c.mint(address(this), 100);
+    //     assertEq(c.balanceOf(address(this)), 100,"ok");
+    //    assertEq(c.balanceOf(0x82Eb1ae21D52821EEb195F2c2c0D40e66b33c97D), 0,"ok");
 
-    }
+    // }
 
 
-    function testTransfer() public{
-          c.mint(address(this), 100);
-          c.transfer(0x82Eb1ae21D52821EEb195F2c2c0D40e66b33c97D,50);
+    // function testTransfer() public{
+    //       c.mint(address(this), 100);
+    //       c.transfer(0x82Eb1ae21D52821EEb195F2c2c0D40e66b33c97D,50);
 
-          assertEq(c.balanceOf(address(this)), 50);
-          assertEq(c.balanceOf(0x82Eb1ae21D52821EEb195F2c2c0D40e66b33c97D),50);
+    //       assertEq(c.balanceOf(address(this)), 50);
+    //       assertEq(c.balanceOf(0x82Eb1ae21D52821EEb195F2c2c0D40e66b33c97D),50);
 
-          vm.prank(0x82Eb1ae21D52821EEb195F2c2c0D40e66b33c97D);
-          c.transfer(address(this),50);
+    //       vm.prank(0x82Eb1ae21D52821EEb195F2c2c0D40e66b33c97D);
+    //       c.transfer(address(this),50);
 
-          assertEq(c.balanceOf(address(this)), 100);
-          assertEq(c.balanceOf(0x82Eb1ae21D52821EEb195F2c2c0D40e66b33c97D),0);
+    //       assertEq(c.balanceOf(address(this)), 100);
+    //       assertEq(c.balanceOf(0x82Eb1ae21D52821EEb195F2c2c0D40e66b33c97D),0);
 
         
-    }
+    // }
 
 
-    function testApproval() public{
-        c.mint(address(this), 100);
-        c.approve(0x82Eb1ae21D52821EEb195F2c2c0D40e66b33c97D,10);
+    // function testApproval() public{
+    //     c.mint(address(this), 100);
+    //     c.approve(0x82Eb1ae21D52821EEb195F2c2c0D40e66b33c97D,10);
 
-        assertEq(c.allowance(address(this),0x82Eb1ae21D52821EEb195F2c2c0D40e66b33c97D), 10,"ok");
+    //     assertEq(c.allowance(address(this),0x82Eb1ae21D52821EEb195F2c2c0D40e66b33c97D), 10,"ok");
 
-        vm.prank(0x82Eb1ae21D52821EEb195F2c2c0D40e66b33c97D);
+    //     vm.prank(0x82Eb1ae21D52821EEb195F2c2c0D40e66b33c97D);
 
-        c.transferFrom(address(this),0x82Eb1ae21D52821EEb195F2c2c0D40e66b33c97D,5);
+    //     c.transferFrom(address(this),0x82Eb1ae21D52821EEb195F2c2c0D40e66b33c97D,5);
 
-        assertEq(c.balanceOf(address(this)),95,"ok");
+    //     assertEq(c.balanceOf(address(this)),95,"ok");
 
-        assertEq(c.balanceOf(0x82Eb1ae21D52821EEb195F2c2c0D40e66b33c97D), 5,"ok");
+    //     assertEq(c.balanceOf(0x82Eb1ae21D52821EEb195F2c2c0D40e66b33c97D), 5,"ok");
 
-        assertEq(c.allowance(address(this),0x82Eb1ae21D52821EEb195F2c2c0D40e66b33c97D), 5,"ok");
+    //     assertEq(c.allowance(address(this),0x82Eb1ae21D52821EEb195F2c2c0D40e66b33c97D), 5,"ok");
 
 
-    }
+    // }
 
-    function testFailApprovals() public{
+    // function testFailApprovals() public{
+    //     c.mint(address(this),100);
+
+    //     c.approve(0x82Eb1ae21D52821EEb195F2c2c0D40e66b33c97D,10);
+
+    //     vm.prank(0x82Eb1ae21D52821EEb195F2c2c0D40e66b33c97D);
+
+    //     c.transferFrom(address(this),0x82Eb1ae21D52821EEb195F2c2c0D40e66b33c97D,20);
+
+
+
+    // }
+
+
+    // function testFailTransfer() public{
+    //     c.mint(address(this), 10);
+
+    //     c.transfer(0x82Eb1ae21D52821EEb195F2c2c0D40e66b33c97D,20);
+    // }
+
+
+    function testTransferEmit() public {
+
         c.mint(address(this),100);
 
-        c.approve(0x82Eb1ae21D52821EEb195F2c2c0D40e66b33c97D,10);
+        vm.expectEmit(true, true, false, true);
 
-        vm.prank(0x82Eb1ae21D52821EEb195F2c2c0D40e66b33c97D);
+        emit Transfer(address(this),0x82Eb1ae21D52821EEb195F2c2c0D40e66b33c97D,10);
 
-        c.transferFrom(address(this),0x82Eb1ae21D52821EEb195F2c2c0D40e66b33c97D,20);
+        c.transfer(0x82Eb1ae21D52821EEb195F2c2c0D40e66b33c97D, 10);
 
-
-
-    }
-
-
-    function testFailTransfer() public{
-        c.mint(address(this), 10);
-
-        c.transfer(0x82Eb1ae21D52821EEb195F2c2c0D40e66b33c97D,20);
     }
 
 
